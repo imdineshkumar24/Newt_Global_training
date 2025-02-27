@@ -111,3 +111,150 @@ CREATE TABLE table_time(
 	start_time TIME NOT NULL,
 	end_time TIME NOT NULL
 )
+
+SELECT * FROM table_time;
+
+INSERT INTO table_time (class_name,start_time,end_time)
+VALUES('MATH','08:00:00','09:00:00'),
+('PHYSICS','09:00:00','10:00:00')
+
+
+SELECT CURRENT_TIME
+
+--precision
+SELECT CURRENT_TIME(4) --output: "23:27:06.655300+05:30"
+SELECT CURRENT_TIME(2) --output: "23:28:10.470000+05:30"
+
+SELECT CURRENT_TIME,LOCALTIME
+
+SELECT LOCALTIME,LOCALTIME(2)
+
+--arithimetic
+
+SELECT time '12:00'-time '4:00' as Result
+
+SELECT CURRENT_TIME,CURRENT_TIME+ time'1:00' as RESULT
+SELECT CURRENT_TIME,
+CURRENT_TIME+ interval'10 hours' as RESULT
+
+--timezone
+show TIMEZONE --output: "Asia/Calcutta"
+
+CREATE TABLE time_zone(
+	tz TIMESTAMP,
+	tztz TIMESTAMPTZ
+)
+SELECT * FROM time_zone
+
+INSERT INTO time_zone(tz,tztz)
+VALUES('2025-02-02 08:09:00-08','2025-02-02 08:09:00-08')
+
+SET TIMEZONE='America/New_york'
+SET TIMEZONE='Asia/Calcutta'
+
+SELECT TIMEOFDAY()
+
+--uuid
+
+CREATE EXTENSION "uuid-ossp"
+
+SELECT uuid_generate_v1()
+--output: "a4f39742-f470-11ef-a1ec-33677504e24f"
+--output: "c0d3b014-f470-11ef-a1ed-4bc8f4269dd6"
+
+SELECT uuid_generate_v4()
+--output: "25e67c70-2b7e-4f91-b696-12623845c028"
+
+CREATE TABlE table_uuid(
+	id UUID DEFAULT uuid_generate_v4(),
+	name VARCHAR(100) not null
+)
+
+SELECT * FROM table_uuid
+
+INSERT INTO table_uuid(name)
+VALUEs('eraser'),('sharpner')
+
+
+--Array
+
+SELECT ARRAY['Dinesh','Rajesh']
+CREATE TABLE table_array(
+	id SERIAL,
+	name VARCHAR(100),
+	phone TEXT[]
+)
+
+SELECT * FROM table_array
+
+INSERT INTO table_array(name,phone)
+VALUES('Dinesh',ARRAY['8954','9876']),
+('Suganraj',ARRAY['8874','9865'])
+
+SELECT name,phone [1] FROM table_array
+
+SELECT 
+	name FROM table_array
+WHERE phone[1]='8874'
+
+--hstore key-value pair
+CREATE EXTENSION IF NOT EXISTS hstore
+
+
+
+CREATE TABLE table_hstore(
+	id SERIAL PRIMARY KEY,
+	title VARCHAR(100) NOT NULL,
+	book_info hstore
+)
+SELECT * FROM table_hstore
+
+INSERT INTO table_hstore(title,book_info)
+VALUES( 'Title 1',
+	' 
+		"publisher"=> "john publisher",
+		"cost"=> "100",
+	'
+)
+
+SELECT book_info->'publisher' as "Publisher"
+FROM table_hstore
+
+
+--json
+CREATE TABLE table_json(
+	id SERIAL PRIMARY KEY,
+	docs JSON
+)
+
+SELECT * FROM table_json
+
+INSERT INTO table_json(docs) VALUES
+('[1,2,3,4,5,6]'),('[2,3,4,5,6,7]'),
+('{"key":"value"}')
+
+SELECT * from table_json
+where docs @>'2' 
+--ERROR:  operator does not exist: json @> unknown
+
+--Network Address
+
+CREATE TABLE table_netadr(
+	id SERIAL PRIMARY KEY,
+	ip INET
+)
+
+SELECT * FROM table_netadr
+
+
+INSERT INTO table_netadr(ip) VALUES
+('192.25.25.00'),
+('255.255.255.26'),
+('193.56.56.34')
+
+
+SELECT 
+	ip,set_masklen(ip,24) as inet_24,
+	set_masklen(ip::cidr,24) as cidr_24
+from table_netadr
+

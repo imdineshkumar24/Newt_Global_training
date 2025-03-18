@@ -29,6 +29,12 @@ select movie_name,
 extract(year from release_date) as "Year"
 from movies --- extract keyword
 
+--date_part as same extract
+
+select movie_name,
+date_part('year',release_date) as "Year"
+from movies
+
 select movie_name,release_date,
 (release_date+10) as "New date"
 from movies
@@ -50,3 +56,10 @@ select timeofday()
 --age function
 
 select age(now(),'2003-05-24')
+
+--date_trunc
+select date_trunc('minutes',current_timestamp) as "Minutes"
+--"2025-03-10 23:33:00+05:30"
+
+select date_trunc('hour',current_timestamp) as "hour"
+--"2025-03-10 23:00:00+05:30"

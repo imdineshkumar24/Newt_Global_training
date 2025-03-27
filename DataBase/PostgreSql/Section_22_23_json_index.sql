@@ -76,3 +76,9 @@ where relname='products'
 drop index prod_name_index
 
 drop index  products_pkey restrict
+
+create index movie_movie_id_movie_name on  movies(movie_id,movie_name)
+
+explain select movie_id from movies ;
+
+explain select * from movies

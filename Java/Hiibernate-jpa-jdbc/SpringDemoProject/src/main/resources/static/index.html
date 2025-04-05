@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Management System</title>
+  <script>
+    async function loadStudents() {
+      const res = await fetch('/api/students');
+      const students = await res.json();
+      const list = document.getElementById('studentList');
+      list.innerHTML = '';
+      students.forEach(s => {
+        list.innerHTML += `<li>${s.name} - ${s.email} - ${s.course} 
+          <button onclick="deleteStudent(${s.id})">Delete</button></li>`;
+      });
+    }
+
+    async function addStudent() {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const course = document.getElementById('course').value;
+
+      await fetch('/api/students', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, course })
+      });
+
+      loadStudents();
+    }
+
+    async function deleteStudent(id) {
+      await fetch(`/api/students/${id}`, { method: 'DELETE' });
+      loadStudents();
+    }
+
+    window.onload = loadStudents;
+  </script>
+</head>
+<body>
+  <h1>Student Management System</h1>
+  <form onsubmit="event.preventDefault(); addStudent();">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="course" placeholder="Course" required>
+    <button type="submit">Add Student</button>
+  </form>
+
+  <ul id="studentList"></ul>
+</body>
+</html>
